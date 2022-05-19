@@ -1,0 +1,77 @@
+import { FormEvent, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useNote } from '../../hooks/useNote'
+import * as Styles from '../../styles/Form.styles'
+
+export function AddNote() {
+    const [ title, setTitle ] = useState('')
+    const [ body, setBody ] = useState('')
+    const [ bgColor, setBgColor ] = useState('#ffffff')
+    const { addNote, error } = useNote()
+
+    const navigate = useNavigate()
+
+    async function handleSubmit(e:FormEvent) {
+        e.preventDefault()
+
+        const data = {
+            title,
+            body,
+            bg_color: bgColor
+        }
+
+        addNote(data)
+
+        if(error) {
+            alert('Ocorreu um erro, tente novamente!')
+            navigate('/note/add')
+        }
+
+        alert('Nova anotação criada com sucesso!')
+        navigate('/')
+    }
+
+    return (
+        <Styles.FormContainer>
+            <form onSubmit={handleSubmit}>
+                <label>
+                    <span>Título:</span>
+                    <input 
+                    type="text" 
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    required
+                    />
+                </label>
+                <label>
+                    <span>Nota:</span>
+                    <textarea
+                    value={body}
+                    onChange={e => setBody(e.target.value)}
+                    >
+
+                    </textarea>
+                </label>
+                <label>
+                    <span>Cor de fundo:</span>
+                    
+                    <select value={bgColor} onChange={e => setBgColor(e.target.value)}>
+                        <option>Branco</option>
+
+                        <option value="#a6fa09">Verde</option>
+
+                        <option value="#cbd561">Amarelo</option>
+
+                        <option value="#f945ae">Rosa</option>
+
+                        <option value="#ff4a4a">Vermelho</option>
+
+                        <option value="#09aafa">Azul</option>
+                    </select>
+                    
+                </label>
+                <button type="submit">Salvar</button>
+            </form>
+        </Styles.FormContainer>
+    )
+}
