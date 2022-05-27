@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { NoteController } from "../controllers/NoteController";
+import { noteController } from "../controllers";
 
 const router = Router();
 
-router.post('/note', new NoteController().create)
-router.get('/notes', new NoteController().read)
-router.get('/note/:id', new NoteController().readOne)
-router.put('/note/:id', new NoteController().update)
-router.delete('/note/:id', new NoteController().delete)
+router.post('/note', noteController.create)
+router.get('/notes', noteController.read)
+router.get('/note/:id', noteController.readOne)
+router.put('/note/:id', noteController.update)
+router.delete('/note/:id', noteController.delete)
 
 export { router }

@@ -1,20 +1,20 @@
 import { Request, Response } from "express";
-import { NotesService } from "../services/NotesService";
-import { NoteDataTypes } from "../types/NoteDataTypes";
-
-export class NoteController {
+import { NoteService } from "../services/NoteService";
+import { NoteDTO } from "../dtos/NoteDTO";
+export class NoteController { 
+    constructor(private noteService: NoteService) {}
 
     async create(request: Request, response:Response ) {
         const { title, body, bg_color } = request.body;
 
-        const data: NoteDataTypes = {
+        const data: NoteDTO = {
             title,
             body,
-            bg_color
+            backgroundColor: bg_color
         }
 
         try {
-            const newNote = await new NotesService().createNote(data)
+            const newNote = await this.noteService.createNote(data)
 
             return response.status(201).json(newNote)
         } catch (error) {
@@ -24,7 +24,7 @@ export class NoteController {
 
     async read(request: Request, response:Response) {
         try {
-            const notes = await new NotesService().getNotes()
+            const notes = await this.noteService.getNotes()
 
             return response.status(200).json(notes)
         } catch (error) {
@@ -37,7 +37,7 @@ export class NoteController {
         const { id } = request.params
 
         try {
-            const note = await new NotesService().getNoteById(parseInt(id))
+            const note = await this.noteService.getNoteById(parseInt(id))
 
             if(note) {
                 return response.status(200).json(note)
@@ -53,17 +53,17 @@ export class NoteController {
         const { id } = request.params
         const { title, body, bg_color } = request.body;
 
-        const data: NoteDataTypes = {
+        const data: NoteDTO = {
             title,
             body,
-            bg_color
+            backgroundColor: bg_color
         }
 
         try {
-            const note = await new NotesService().getNoteById(parseInt(id))
+            const note = this.noteService.getNoteById(parseInt(id))
 
             if(note) {
-                await new NotesService().editNote(parseInt(id), data)
+                await this.noteService.editNote(parseInt(id), data)
 
                 return response.status(200).json({message: 'Nota editada com sucesso.'})
             } else {
@@ -78,10 +78,10 @@ export class NoteController {
         const { id } = request.params
 
         try {          
-            const note = await new NotesService().getNoteById(parseInt(id))
+            const note = this.noteService.getNoteById(parseInt(id))
 
             if(note) {
-                await new NotesService().removeNote(parseInt(id))
+                await this.noteService.removeNote(parseInt(id))
 
                 return response.status(200).json({message: 'Nota deletada com sucesso.'})
             } else {
