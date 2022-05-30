@@ -2,7 +2,13 @@ import { Request, Response } from "express";
 import { NoteService } from "../services/NoteService";
 import { NoteDTO } from "../dtos/NoteDTO";
 export class NoteController { 
-    constructor(private noteService: NoteService) {}
+    constructor(private noteService: NoteService) {
+        this.create = this.create.bind(this); 
+        this.delete = this.delete.bind(this); 
+        this.read = this.read.bind(this); 
+        this.readOne = this.readOne.bind(this); 
+        this.update = this.update.bind(this); 
+    }
 
     async create(request: Request, response:Response ) {
         const { title, body, bg_color } = request.body;
